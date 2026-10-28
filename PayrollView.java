@@ -151,11 +151,11 @@ public class PayrollView extends JFrame {
 
         // Left Form Panel
         JPanel formContainer = new JPanel(new BorderLayout(5, 5));
-        formContainer.setPreferredSize(new Dimension(340, 0));
+        formContainer.setPreferredSize(new Dimension(380, 0));
         formContainer.setBorder(BorderFactory.createTitledBorder("Employee Details"));
 
-        JPanel fieldsPanel = new JPanel(new GridLayout(7, 2, 8, 10));
-        fieldsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JPanel fieldsPanel = new JPanel(new GridLayout(7, 2, 8, 8));
+        fieldsPanel.setBorder(new EmptyBorder(8, 10, 8, 10));
 
         fieldsPanel.add(new JLabel("Employee ID:"));
         fieldsPanel.add(txtEmpId);
@@ -172,20 +172,53 @@ public class PayrollView extends JFrame {
         fieldsPanel.add(new JLabel("Phone Number:"));
         fieldsPanel.add(txtPhone);
 
+        // Buttons Panel with Title and Subtitle descriptions permanently visible
         JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 8, 8));
-        buttonPanel.setBorder(new EmptyBorder(0, 10, 10, 10));
-        styleButton(btnAddEmp, new Color(40, 140, 60));
-        styleButton(btnUpdateEmp, new Color(30, 110, 190));
-        styleButton(btnDeleteEmp, new Color(190, 40, 40));
-        styleButton(btnClearEmp, new Color(100, 100, 100));
+        buttonPanel.setPreferredSize(new Dimension(0, 95));
+        styleButton(btnAddEmp, new Color(34, 139, 34), "Add Employee", "Save new record to DB");
+        styleButton(btnUpdateEmp, new Color(24, 116, 205), "Update Employee", "Save modifications");
+        styleButton(btnDeleteEmp, new Color(205, 38, 38), "Delete Employee", "Remove from database");
+        styleButton(btnClearEmp, new Color(90, 100, 110), "Clear Fields", "Reset input form");
 
         buttonPanel.add(btnAddEmp);
         buttonPanel.add(btnUpdateEmp);
         buttonPanel.add(btnDeleteEmp);
         buttonPanel.add(btnClearEmp);
 
-        formContainer.add(fieldsPanel, BorderLayout.CENTER);
-        formContainer.add(buttonPanel, BorderLayout.SOUTH);
+        // Always-visible Description Box
+        JPanel guidePanel = new JPanel();
+        guidePanel.setLayout(new BoxLayout(guidePanel, BoxLayout.Y_AXIS));
+        guidePanel.setBackground(new Color(248, 250, 253));
+        guidePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("Option Descriptions (Always Visible)"),
+                new EmptyBorder(6, 10, 8, 10)
+        ));
+
+        JLabel desc1 = new JLabel("<html><b style='color:#1b732b;'>[Add Employee]:</b> Saves entered details as a new employee into SQLite.</html>");
+        JLabel desc2 = new JLabel("<html><b style='color:#145a9e;'>[Update Employee]:</b> Updates details of the employee selected in table.</html>");
+        JLabel desc3 = new JLabel("<html><b style='color:#9e1414;'>[Delete Employee]:</b> Permanently deletes selected employee and payrolls.</html>");
+        JLabel desc4 = new JLabel("<html><b style='color:#47525d;'>[Clear Fields]:</b> Clears all input fields above to start a fresh entry.</html>");
+
+        desc1.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        desc2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        desc3.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        desc4.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+
+        guidePanel.add(desc1);
+        guidePanel.add(Box.createVerticalStrut(4));
+        guidePanel.add(desc2);
+        guidePanel.add(Box.createVerticalStrut(4));
+        guidePanel.add(desc3);
+        guidePanel.add(Box.createVerticalStrut(4));
+        guidePanel.add(desc4);
+
+        JPanel buttonSection = new JPanel(new BorderLayout(8, 8));
+        buttonSection.setBorder(new EmptyBorder(4, 10, 10, 10));
+        buttonSection.add(buttonPanel, BorderLayout.NORTH);
+        buttonSection.add(guidePanel, BorderLayout.CENTER);
+
+        formContainer.add(fieldsPanel, BorderLayout.NORTH);
+        formContainer.add(buttonSection, BorderLayout.CENTER);
 
         // Right Table Panel
         JPanel tableContainer = new JPanel(new BorderLayout(5, 5));
@@ -194,6 +227,8 @@ public class PayrollView extends JFrame {
         JPanel searchBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchBar.add(new JLabel("Filter / Search:"));
         searchBar.add(txtSearchEmp);
+        styleButton(btnSearchEmp, new Color(45, 60, 80), "Search", "");
+        styleButton(btnRefreshEmp, new Color(45, 60, 80), "Show All", "");
         searchBar.add(btnSearchEmp);
         searchBar.add(btnRefreshEmp);
 
@@ -255,12 +290,9 @@ public class PayrollView extends JFrame {
 
         // Actions
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        styleButton(btnCalculatePreview, new Color(40, 100, 180));
-        styleButton(btnSavePayroll, new Color(30, 140, 60));
-        styleButton(btnClearCalc, new Color(110, 110, 110));
-
-        btnCalculatePreview.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnSavePayroll.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        styleButton(btnCalculatePreview, new Color(24, 116, 205), "1. Calculate Preview", "Compute deductions & net pay");
+        styleButton(btnSavePayroll, new Color(34, 139, 34), "2. Save & Process Payroll", "Commit record to SQLite DB");
+        styleButton(btnClearCalc, new Color(90, 100, 110), "Reset Inputs", "Restore default values");
 
         actions.add(btnCalculatePreview);
         actions.add(btnSavePayroll);
@@ -301,9 +333,9 @@ public class PayrollView extends JFrame {
         cmbSlipRecords.setPreferredSize(new Dimension(350, 28));
         topBar.add(cmbSlipRecords);
 
-        styleButton(btnGenerateSlip, new Color(30, 110, 190));
-        styleButton(btnExportSlip, new Color(40, 140, 60));
-        styleButton(btnPrintSlip, new Color(80, 80, 80));
+        styleButton(btnGenerateSlip, new Color(24, 116, 205), "View Pay Slip", "Display formatted receipt");
+        styleButton(btnExportSlip, new Color(34, 139, 34), "Save as .TXT", "Export slip to file");
+        styleButton(btnPrintSlip, new Color(70, 70, 70), "Print Pay Slip", "Send to printer");
 
         topBar.add(btnGenerateSlip);
         topBar.add(btnExportSlip);
@@ -328,12 +360,14 @@ public class PayrollView extends JFrame {
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         topBar.add(new JLabel("Search Payrolls:"));
         topBar.add(txtSearchPayroll);
+        styleButton(btnSearchPayroll, new Color(45, 60, 80), "Search History", "");
+        styleButton(btnRefreshPayroll, new Color(45, 60, 80), "Refresh", "");
         topBar.add(btnSearchPayroll);
         topBar.add(btnRefreshPayroll);
         topBar.add(Box.createHorizontalStrut(20));
 
-        styleButton(btnViewSelectedSlip, new Color(30, 110, 190));
-        styleButton(btnDeletePayroll, new Color(190, 40, 40));
+        styleButton(btnViewSelectedSlip, new Color(24, 116, 205), "Open in Payslip Viewer", "View selected slip");
+        styleButton(btnDeletePayroll, new Color(205, 38, 38), "Delete Record", "Remove from history");
 
         topBar.add(btnViewSelectedSlip);
         topBar.add(btnDeletePayroll);
@@ -441,11 +475,47 @@ public class PayrollView extends JFrame {
         return JOptionPane.showConfirmDialog(this, message, title, JOptionPane.YES_NO_OPTION);
     }
 
-    private void styleButton(JButton btn, Color bgColor) {
+    private void styleButton(JButton btn, Color bgColor, String title, String description) {
+        btn.setUI(new javax.swing.plaf.basic.BasicButtonUI());
         btn.setBackground(bgColor);
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(bgColor.darker(), 1, true),
+                BorderFactory.createEmptyBorder(6, 10, 6, 10)
+        ));
+
+        if (description != null && !description.trim().isEmpty()) {
+            btn.setText("<html><center><b style='font-size:12px; color:#FFFFFF;'>" + title + "</b><br>"
+                    + "<span style='font-size:9px; color:#F0F0F0;'>" + description + "</span></center></html>");
+            btn.setToolTipText(title + ": " + description);
+        } else {
+            btn.setText("<html><center><b style='font-size:12px; color:#FFFFFF;'>" + title + "</b></center></html>");
+            btn.setToolTipText(title);
+        }
+
+        // Rollover hover effect
+        Color hoverColor = new Color(
+                Math.min(255, bgColor.getRed() + 25),
+                Math.min(255, bgColor.getGreen() + 25),
+                Math.min(255, bgColor.getBlue() + 25)
+        );
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btn.setBackground(hoverColor);
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btn.setBackground(bgColor);
+            }
+        });
+    }
+
+    private void styleButton(JButton btn, Color bgColor) {
+        styleButton(btn, bgColor, btn.getText(), "");
     }
 
     private void styleTable(JTable table) {
